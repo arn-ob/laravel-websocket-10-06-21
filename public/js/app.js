@@ -1912,11 +1912,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: ['usernames'],
   data: function data() {
     return {
-      userId: "",
+      userId: this.usernames,
       // Math.random().toString(36).slice(-5),
       messages: [],
       newMessage: "",
@@ -1943,7 +1943,7 @@ __webpack_require__.r(__webpack_exports__);
     submit: function submit() {
       var _this2 = this;
 
-      axios.post("".concat("http://127.0.0.1:8000", "/api/message"), {
+      axios.post("/api/message", {
         user: this.userId,
         message: this.newMessage
       }).then(function (response) {
@@ -44033,7 +44033,7 @@ var render = function() {
               ],
               staticClass: "form-control",
               staticStyle: { "margin-bottom": "5px" },
-              attrs: { type: "text", placeholder: "User Name" },
+              attrs: { type: "text" },
               domProps: { value: _vm.userId },
               on: {
                 input: function($event) {

@@ -13,7 +13,6 @@
           <input
             type="text"
             class="form-control"
-            placeholder="User Name"
             v-model="userId"
             style="margin-bottom: 5px"
           />
@@ -68,12 +67,13 @@
 
 <script>
 export default {
+  props: ['usernames'],
   data() {
     return {
-      userId: "", // Math.random().toString(36).slice(-5),
+      userId: this.usernames, // Math.random().toString(36).slice(-5),
       messages: [],
       newMessage: "",
-      connEnable: false
+      connEnable: false,
     };
   },
   mounted() {},
@@ -89,7 +89,7 @@ export default {
     },
     submit() {
       axios
-        .post(`${process.env.MIX_WEBSOCKET_SERVER_BASE_URL}/api/message`, {
+        .post(`/api/message`, {
           user: this.userId,
           message: this.newMessage,
         })
