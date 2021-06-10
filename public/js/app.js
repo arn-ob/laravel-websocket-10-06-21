@@ -1921,7 +1921,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       console.log("Connected");
-      Echo["private"]("chatuser").listen("OrderShipped", function (e) {
+      Echo.channel("chat").listen("NewChatMessage", function (e) {
         if (e.user != _this.userId) {
           _this.messages.push({
             text: e.message,

@@ -72,7 +72,7 @@ export default {
   methods: {
     connection() {
       console.log("Connected");
-      Echo.private(`chatuser`).listen("OrderShipped", (e) => {
+      Echo.channel(`chat`).listen("NewChatMessage", (e) => {
         if (e.user != this.userId) {
           this.messages.push({
             text: e.message,
