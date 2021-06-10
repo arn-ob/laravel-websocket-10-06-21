@@ -1,8 +1,7 @@
 <template>
     <div class="is-clearfix">
-        
         <div class="notification is-primary is-pulled-right">
-            <small>Sent by {{ user }}</small><br />
+            <small style="color: black">Sent by {{ user }}</small><br />
             {{ message }}
         </div>
     </div>

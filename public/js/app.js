@@ -1906,13 +1906,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       userId: "",
       // Math.random().toString(36).slice(-5),
       messages: [],
-      newMessage: ""
+      newMessage: "",
+      connEnable: false
     };
   },
   mounted: function mounted() {},
@@ -1920,6 +1928,7 @@ __webpack_require__.r(__webpack_exports__);
     connection: function connection() {
       var _this = this;
 
+      this.connEnable = true;
       Echo.channel("chat").listen("NewChatMessage", function (e) {
         // Public  Channel
         // Echo.private(`chatuser`).listen("OrderShipped", (e) => {     // Private Channel
@@ -1992,7 +2001,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-//
 //
 //
 //
@@ -44009,44 +44017,48 @@ var render = function() {
         "div",
         { staticClass: "form-group" },
         [
-          _c("label", { attrs: { for: "username_1" } }, [
-            _vm._v("Type Your name")
-          ]),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.userId,
-                expression: "userId"
-              }
-            ],
-            staticClass: "form-control",
-            staticStyle: { "margin-bottom": "30px" },
-            attrs: { type: "text", placeholder: "User Name" },
-            domProps: { value: _vm.userId },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+          _c("div", { staticStyle: { "margin-bottom": "20px" } }, [
+            _c("label", { attrs: { for: "username_1" } }, [
+              _vm._v("Your name")
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.userId,
+                  expression: "userId"
                 }
-                _vm.userId = $event.target.value
-              }
-            }
-          }),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
+              ],
+              staticClass: "form-control",
+              staticStyle: { "margin-bottom": "5px" },
+              attrs: { type: "text", placeholder: "User Name" },
+              domProps: { value: _vm.userId },
               on: {
-                click: function($event) {
-                  return _vm.connection()
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.userId = $event.target.value
                 }
               }
-            },
-            [_vm._v("Join")]
-          ),
+            }),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    return _vm.connection()
+                  }
+                }
+              },
+              [_vm._v(" Join ")]
+            )
+          ]),
           _vm._v(" "),
           _vm._l(_vm.messages, function(message) {
             return _c(
@@ -44068,59 +44080,71 @@ var render = function() {
             )
           }),
           _vm._v(" "),
-          _c(
-            "form",
-            {
-              on: {
-                submit: function($event) {
-                  $event.preventDefault()
-                  return _vm.submit.apply(null, arguments)
-                }
-              }
-            },
-            [
-              _c(
-                "div",
-                { staticClass: "field has-addons has-addons-fullwidth" },
+          _vm.connEnable == true
+            ? _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.submit.apply(null, arguments)
+                    }
+                  }
+                },
                 [
-                  _c("div", { staticClass: "control is-expanded" }, [
-                    _c("input", {
-                      directives: [
+                  _c(
+                    "div",
+                    { staticClass: "field has-addons has-addons-fullwidth" },
+                    [
+                      _c(
+                        "div",
                         {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.newMessage,
-                          expression: "newMessage"
-                        }
-                      ],
-                      staticClass: "input",
-                      attrs: { type: "text", placeholder: "Type a message" },
-                      domProps: { value: _vm.newMessage },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.newMessage = $event.target.value
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "control" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button is-danger",
-                        attrs: { type: "submit", disabled: !_vm.newMessage }
-                      },
-                      [_vm._v("\n              Send\n            ")]
-                    )
-                  ])
+                          staticClass: "control is-expanded",
+                          staticStyle: { width: "94%" }
+                        },
+                        [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.newMessage,
+                                expression: "newMessage"
+                              }
+                            ],
+                            staticClass: "input",
+                            attrs: {
+                              type: "text",
+                              placeholder: "Type a message"
+                            },
+                            domProps: { value: _vm.newMessage },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.newMessage = $event.target.value
+                              }
+                            }
+                          })
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "control" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "button is-danger",
+                            attrs: { type: "submit", disabled: !_vm.newMessage }
+                          },
+                          [_vm._v("\n              Send\n            ")]
+                        )
+                      ])
+                    ]
+                  )
                 ]
               )
-            ]
-          )
+            : _vm._e()
         ],
         2
       )
@@ -44152,7 +44176,9 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "is-clearfix" }, [
     _c("div", { staticClass: "notification is-info is-pulled-left" }, [
-      _c("small", [_vm._v("Sent by " + _vm._s(_vm.user))]),
+      _c("small", { staticStyle: { color: "black" } }, [
+        _vm._v("Sent by " + _vm._s(_vm.user))
+      ]),
       _c("br"),
       _vm._v("\n        " + _vm._s(_vm.message) + "\n    ")
     ])
@@ -44183,7 +44209,9 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "is-clearfix" }, [
     _c("div", { staticClass: "notification is-primary is-pulled-right" }, [
-      _c("small", [_vm._v("Sent by " + _vm._s(_vm.user))]),
+      _c("small", { staticStyle: { color: "black" } }, [
+        _vm._v("Sent by " + _vm._s(_vm.user))
+      ]),
       _c("br"),
       _vm._v("\n        " + _vm._s(_vm.message) + "\n    ")
     ])

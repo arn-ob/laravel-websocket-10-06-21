@@ -7,15 +7,22 @@
 
     <div class="box">
       <div class="form-group">
-        <label for="username_1">Type Your name</label>
-        <input
-          type="text"
-          class="form-control"
-          placeholder="User Name"
-          v-model="userId"
-          style="margin-bottom: 30px"
-        />
-        <button v-on:click="connection()">Join</button>
+        
+        <div style="margin-bottom: 20px">
+          <label for="username_1">Your name</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="User Name"
+            v-model="userId"
+            style="margin-bottom: 5px"
+          />
+          <button 
+            type="button" 
+            class="btn btn-primary" 
+            v-on:click="connection()"
+          > Join </button>
+        </div>
 
         <!-- <p v-if="!messages.length">Start typing the first message</p> -->
 
@@ -33,9 +40,9 @@
           ></message>
         </div>
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" v-if="connEnable == true">
           <div class="field has-addons has-addons-fullwidth">
-            <div class="control is-expanded">
+            <div class="control is-expanded" style="width: 94%">
               <input
                 class="input"
                 type="text"
@@ -66,11 +73,13 @@ export default {
       userId: "", // Math.random().toString(36).slice(-5),
       messages: [],
       newMessage: "",
+      connEnable: false
     };
   },
   mounted() {},
   methods: {
     connection() {
+      this.connEnable = true 
       Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
       // Echo.private(`chatuser`).listen("OrderShipped", (e) => {     // Private Channel
         if (e.user != this.userId) {

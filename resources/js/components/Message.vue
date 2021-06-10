@@ -1,7 +1,7 @@
 <template>
     <div class="is-clearfix">
         <div class="notification is-info is-pulled-left">
-            <small>Sent by {{ user }}</small><br />
+            <small style="color: black">Sent by {{ user }}</small><br />
             {{ message }}
         </div>
     </div>
