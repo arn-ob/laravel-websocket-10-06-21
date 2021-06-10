@@ -1930,8 +1930,10 @@ __webpack_require__.r(__webpack_exports__);
 
       this.connEnable = true; // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
 
-      Echo["private"]("chatuser." + this.userId).listen("OrderShipped", function (e) {
+      Echo["private"]("private-chatuser." + this.userId).listen("OrderShipped", function (e) {
         // Private Channel
+        console.log(e);
+
         if (e.user != _this.userId) {
           _this.messages.push({
             text: e.message,
@@ -1947,8 +1949,6 @@ __webpack_require__.r(__webpack_exports__);
         user: this.userId,
         message: this.newMessage
       }).then(function (response) {
-        // console.log(this.newMessage);
-        // console.log(this.userId);
         _this2.messages.push({
           text: _this2.newMessage,
           user: _this2.userId

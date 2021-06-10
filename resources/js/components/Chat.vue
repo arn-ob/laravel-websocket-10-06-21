@@ -81,7 +81,8 @@ export default {
     connection() {
       this.connEnable = true 
       // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
-      Echo.private(`chatuser.`+ this.userId).listen("OrderShipped", (e) => {     // Private Channel
+      Echo.private(`private-chatuser.`+ this.userId).listen("OrderShipped", (e) => {     // Private Channel
+        console.log(e)
         if (e.user != this.userId) {
           this.messages.push({ text: e.message, user: e.user });
         }
@@ -95,9 +96,6 @@ export default {
         })
         .then(
           (response) => {
-            // console.log(this.newMessage);
-            // console.log(this.userId);
-
             this.messages.push({
               text: this.newMessage,
               user: this.userId,
