@@ -7,3 +7,5 @@
 ## Run CLI: php artisan websocket:serve
 
 ## URL: <http://localhost:8000/laravel-websockets>
+
+## npm run dev && php artisan serve 

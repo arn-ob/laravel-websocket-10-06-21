@@ -1,7 +1,10 @@
 <template>
     <div class="is-clearfix">
-        <small>Sent by {{ user }}</small><br />
-        <div class="notification is-primary is-pulled-right">{{ message }}</div>
+        
+        <div class="notification is-primary is-pulled-right">
+            <small>Sent by {{ user }}</small><br />
+            {{ message }}
+        </div>
     </div>
 </template>
 

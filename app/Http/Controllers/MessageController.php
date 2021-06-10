@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Events\NewChatMessage;
+use App\Events\OrderShipped;
+
 
 class MessageController extends Controller
 {
@@ -17,7 +19,8 @@ class MessageController extends Controller
 
         // TODO: Sanitize input
 
-        event(new NewChatMessage($request->message, $request->user));
+        // event(new NewChatMessage($request->message, $request->user));
+        event(new OrderShipped($request->message, $request->user));
 
         return response()->json(["asdsad" => "asd"], 200);
 

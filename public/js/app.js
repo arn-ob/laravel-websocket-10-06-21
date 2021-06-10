@@ -1915,30 +1915,30 @@ __webpack_require__.r(__webpack_exports__);
       newMessage: ""
     };
   },
-  mounted: function mounted() {
-    var _this = this;
-
-    Echo.channel("chat").listen("NewChatMessage", function (e) {
-      if (e.user != _this.userId) {
-        _this.messages.push({
-          text: e.message,
-          user: e.user
-        });
-      }
-    });
-  },
+  mounted: function mounted() {},
   methods: {
+    connection: function connection() {
+      var _this = this;
+
+      console.log("Connected");
+      Echo["private"]("chatuser").listen("OrderShipped", function (e) {
+        if (e.user != _this.userId) {
+          _this.messages.push({
+            text: e.message,
+            user: e.user
+          });
+        }
+      });
+    },
     submit: function submit() {
       var _this2 = this;
 
-      console.log("Selected", this.newMessage);
       axios.post("".concat("http://127.0.0.1:8000", "/api/message"), {
         user: this.userId,
         message: this.newMessage
       }).then(function (response) {
-        console.log(_this2.newMessage);
-        console.log(_this2.userId);
-
+        // console.log(this.newMessage);
+        // console.log(this.userId);
         _this2.messages.push({
           text: _this2.newMessage,
           user: _this2.userId
@@ -1991,6 +1991,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+//
+//
+//
 //
 //
 //
@@ -44034,6 +44037,18 @@ var render = function() {
             }
           }),
           _vm._v(" "),
+          _c(
+            "button",
+            {
+              on: {
+                click: function($event) {
+                  return _vm.connection()
+                }
+              }
+            },
+            [_vm._v("Join")]
+          ),
+          _vm._v(" "),
           _vm._l(_vm.messages, function(message) {
             return _c(
               "div",
@@ -44168,11 +44183,10 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "is-clearfix" }, [
-    _c("small", [_vm._v("Sent by " + _vm._s(_vm.user))]),
-    _c("br"),
-    _vm._v(" "),
     _c("div", { staticClass: "notification is-primary is-pulled-right" }, [
-      _vm._v(_vm._s(_vm.message))
+      _c("small", [_vm._v("Sent by " + _vm._s(_vm.user))]),
+      _c("br"),
+      _vm._v("\n        " + _vm._s(_vm.message) + "\n    ")
     ])
   ])
 }

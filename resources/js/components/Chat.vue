@@ -15,6 +15,7 @@
           v-model="userId"
           style="margin-bottom: 30px"
         />
+        <button v-on:click="connection()">Join</button>
 
         <!-- <p v-if="!messages.length">Start typing the first message</p> -->
 
@@ -53,7 +54,6 @@
             </div>
           </div>
         </form>
-
       </div>
     </div>
   </div>
@@ -68,19 +68,20 @@ export default {
       newMessage: "",
     };
   },
-  mounted() {
-    Echo.channel("chat").listen("NewChatMessage", (e) => {
-      if (e.user != this.userId) {
-        this.messages.push({
-          text: e.message,
-          user: e.user,
-        });
-      }
-    });
-  },
+  mounted() {},
   methods: {
+    connection() {
+      console.log("Connected");
+      Echo.private(`chatuser`).listen("OrderShipped", (e) => {
+        if (e.user != this.userId) {
+          this.messages.push({
+            text: e.message,
+            user: e.user,
+          });
+        }
+      });
+    },
     submit() {
-      console.log("Selected", this.newMessage);
       axios
         .post(`${process.env.MIX_WEBSOCKET_SERVER_BASE_URL}/api/message`, {
           user: this.userId,
@@ -88,8 +89,8 @@ export default {
         })
         .then(
           (response) => {
-            console.log(this.newMessage);
-            console.log(this.userId);
+            // console.log(this.newMessage);
+            // console.log(this.userId);
 
             this.messages.push({
               text: this.newMessage,

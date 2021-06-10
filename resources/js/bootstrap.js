@@ -42,5 +42,5 @@ window.Echo = new Echo({
     wsPort: process.env.MIX_WEBSOCKET_PORT,
     // disableStats: true,
     enabledTransports: ['ws'],
-    forceTLS: false // this convert wss to ws
+    forceTLS: false, // this convert wss to ws
 });
