@@ -32,6 +32,6 @@ class OrderShipped
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('chatuser');
+        return new PrivateChannel('private-chatuser.'.$this->user);
     }
 }

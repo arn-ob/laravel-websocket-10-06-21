@@ -80,8 +80,8 @@ export default {
   methods: {
     connection() {
       this.connEnable = true 
-      Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
-      // Echo.private(`chatuser`).listen("OrderShipped", (e) => {     // Private Channel
+      // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
+      Echo.private(`chatuser.`+ this.userId).listen("OrderShipped", (e) => {     // Private Channel
         if (e.user != this.userId) {
           this.messages.push({ text: e.message, user: e.user });
         }

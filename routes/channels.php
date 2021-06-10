@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Log;
 // });
 
 
-// Broadcast::channel('chatuser', function ($user) {
-//     Log::error($user);
-//     return $user;
-// });
+Broadcast::channel('chatuser.{id}', function ($user, $id) {
+    return true;
+});

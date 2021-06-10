@@ -41,4 +41,9 @@ window.Echo = new Echo({
     wsPort: process.env.MIX_WEBSOCKET_PORT,
     enabledTransports: ['ws'],
     forceTLS: false, // this convert wss to ws
+    // auth: {
+    //     headers: {
+    //         Authorization: 'Bearer ' + "asdasdasdasdweqweasdasgefasdz"
+    //     },
+    // },
 });

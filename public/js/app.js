@@ -1928,10 +1928,10 @@ __webpack_require__.r(__webpack_exports__);
     connection: function connection() {
       var _this = this;
 
-      this.connEnable = true;
-      Echo.channel("chat").listen("NewChatMessage", function (e) {
-        // Public  Channel
-        // Echo.private(`chatuser`).listen("OrderShipped", (e) => {     // Private Channel
+      this.connEnable = true; // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
+
+      Echo["private"]("chatuser." + this.userId).listen("OrderShipped", function (e) {
+        // Private Channel
         if (e.user != _this.userId) {
           _this.messages.push({
             text: e.message,
@@ -2103,6 +2103,11 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   wsPort: "6001",
   enabledTransports: ['ws'],
   forceTLS: false // this convert wss to ws
+  // auth: {
+  //     headers: {
+  //         Authorization: 'Bearer ' + "asdasdasdasdweqweasdasgefasdz"
+  //     },
+  // },
 
 });
 
