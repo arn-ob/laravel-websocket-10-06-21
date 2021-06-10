@@ -37,10 +37,8 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: process.env.MIX_PUSHER_APP_KEY,
     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    // encrypted: false,
     wsHost: window.location.hostname,
     wsPort: process.env.MIX_WEBSOCKET_PORT,
-    // disableStats: true,
     enabledTransports: ['ws'],
     forceTLS: false, // this convert wss to ws
 });

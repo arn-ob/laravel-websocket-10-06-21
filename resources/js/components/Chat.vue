@@ -71,13 +71,10 @@ export default {
   mounted() {},
   methods: {
     connection() {
-      console.log("Connected");
-      Echo.channel(`chat`).listen("NewChatMessage", (e) => {
+      Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
+      // Echo.private(`chatuser`).listen("OrderShipped", (e) => {     // Private Channel
         if (e.user != this.userId) {
-          this.messages.push({
-            text: e.message,
-            user: e.user,
-          });
+          this.messages.push({ text: e.message, user: e.user });
         }
       });
     },

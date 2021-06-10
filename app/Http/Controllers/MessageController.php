@@ -12,17 +12,12 @@ class MessageController extends Controller
     public function broadcast(Request $request) {
 
         if (! $request->filled('message')) {
-            return response()->json([
-                'message' => 'No message to send'
-            ], 422);
+            return response()->json(['message' => 'No message to send'], 422);
         }
 
-        // TODO: Sanitize input
+        event(new NewChatMessage($request->message, $request->user));  // Public Channel
+        // event(new OrderShipped($request->message, $request->user)); // Private Channel
 
-        event(new NewChatMessage($request->message, $request->user));
-        // event(new OrderShipped($request->message, $request->user));
-
-        return response()->json(["asdsad" => "asd"], 200);
-
+        return response()->json(["broadcast" => "true"], 200);
     }
 }

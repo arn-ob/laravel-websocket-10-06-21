@@ -1920,8 +1920,9 @@ __webpack_require__.r(__webpack_exports__);
     connection: function connection() {
       var _this = this;
 
-      console.log("Connected");
       Echo.channel("chat").listen("NewChatMessage", function (e) {
+        // Public  Channel
+        // Echo.private(`chatuser`).listen("OrderShipped", (e) => {     // Private Channel
         if (e.user != _this.userId) {
           _this.messages.push({
             text: e.message,
@@ -2090,10 +2091,8 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   broadcaster: 'pusher',
   key: "local",
   cluster: "mt1",
-  // encrypted: false,
   wsHost: window.location.hostname,
   wsPort: "6001",
-  // disableStats: true,
   enabledTransports: ['ws'],
   forceTLS: false // this convert wss to ws
 
