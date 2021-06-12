@@ -24,7 +24,7 @@ class MessageController extends Controller
     	$newMessage->save();
 
         // event(new NewChatMessage($request->message, $request->user_name));  // Public Channel
-        broadcast(new OrderShipped($newMessage))->toOthers(); // Private Channel
+        event(new OrderShipped($newMessage)); // Private Channel
 
         return response()->json(["broadcast" => "true"], 200);
     }

@@ -11,7 +11,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\ChatMessage;
 
-class OrderShipped
+class OrderShipped implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     private $chatMessage;
@@ -33,6 +33,6 @@ class OrderShipped
      */
     public function broadcastOn()
     {
-        return new PresenceChannel('chatuser.2');
+        return new PrivateChannel('chatuser.'.$this->chatMessage->chatroom_id);
     }
 }
