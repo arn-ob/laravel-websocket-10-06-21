@@ -1,12 +1,19 @@
+<div class="container">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
 
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
-
-<section class="section">
-    <div id="app" class="container">
-        <chat usernames={{ Auth::user()->name }} user_id={{ Auth::user()->id }}></chat>
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+        <h5 class="my-0 mr-md-auto font-weight-normal">Laravel</h5>
+        <nav class="my-2 my-md-0 mr-md-3">
+            <p class="p-2 text-dark">{{ Auth::user()->name }}</p>
+        </nav>
     </div>
-</section>
+
+    <section class="section">
+        <div id="app" class="container">
+            <chat usernames={{ Auth::user()->name }} user_id={{ Auth::user()->id }}></chat>
+        </div>
+    </section>
 
 
-<script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
+</div>

@@ -1957,6 +1957,7 @@ __webpack_require__.r(__webpack_exports__);
       this.getMessages(); // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
 
       Echo["private"]("chatuser." + this.inbox_id).listen("OrderShipped", function (e) {
+        // this.messages.push({ message: this.newMessage, username: this.user_name });
         _this.getMessages();
       });
     },
