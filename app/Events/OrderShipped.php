@@ -11,6 +11,8 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\ChatMessage;
 
+
+// Needed to implements ShouldBroadcast from Event dispatch
 class OrderShipped implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
