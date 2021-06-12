@@ -10,6 +10,7 @@
 
 ## npm run dev && php artisan serve 
 
-## For Authication Run 
+## For Authication UI install and Run 
 
 ## php artisan ui:auth
+
