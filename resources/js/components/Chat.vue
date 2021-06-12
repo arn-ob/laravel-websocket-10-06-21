@@ -8,59 +8,81 @@
     <div class="box">
       <div class="form-group">
         <div style="margin-bottom: 20px">
-          <label for="username_1">Your name</label>
-          <input
-            type="text"
-            class="form-control"
-            v-model="user_name"
-            style="margin-bottom: 5px"
-          />
-          <button
-            type="button"
-            class="btn btn-primary"
-            v-on:click="connection()"
-          >
-            Join
-          </button>
-        </div>
-
-        <!-- <p v-if="!messages.length">Start typing the first message</p> -->
-
-        <div v-for="message in messages">
-          <my-message
-            v-if="message.username == user_name"
-            :message="message.message"
-            :user="message.username"
-          ></my-message>
-
-          <message
-            v-if="message.username != user_name"
-            :message="message.message"
-            :user="message.username"
-          ></message>
-        </div>
-
-        <form @submit.prevent="submit" v-if="connEnable == true">
-          <div class="field has-addons has-addons-fullwidth">
-            <div class="control is-expanded" style="width: 94%">
-              <input
-                class="input"
-                type="text"
-                placeholder="Type a message"
-                v-model="newMessage"
-              />
+          <div class="container">
+            
+            <div class="row">
+              <div class="col-sm">
+                <label for="username_1">Your name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="user_name"
+                  style="margin-bottom: 5px"
+                />
+              </div>
+              <div class="col-sm">
+                <label for="username_1">Select Inbox ID</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="inbox_id"
+                  style="margin-bottom: 5px"
+                />
+              </div>
             </div>
-            <div class="control">
-              <button
-                type="submit"
-                class="button is-danger"
-                :disabled="!newMessage"
-              >
-                Send
-              </button>
-            </div>
+
+            <button
+              style="margin-top: 10px"
+              type="button"
+              class="btn btn-primary"
+              v-on:click="connection()"
+            >
+              Join
+            </button>
+          
           </div>
-        </form>
+        </div>
+
+        <div class="container">
+        
+          <div v-for="message in messages">
+            <my-message
+              v-if="message.username == user_name"
+              :message="message.message"
+              :user="message.username"
+            ></my-message>
+
+            <message
+              v-if="message.username != user_name"
+              :message="message.message"
+              :user="message.username"
+            ></message>
+          </div>
+
+          <form @submit.prevent="submit" v-if="connEnable == true">
+            <div class="field has-addons has-addons-fullwidth">
+              <div class="control is-expanded" style="width: 94%">
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Type a message"
+                  v-model="newMessage"
+                />
+              </div>
+              <div class="control">
+                <button
+                  type="submit"
+                  class="button is-danger"
+                  :disabled="!newMessage"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          </form>
+        
+        </div>
+
       </div>
     </div>
   </div>
@@ -75,7 +97,7 @@ export default {
       user_name: this.usernames, // Math.random().toString(36).slice(-5),
       messages: [],
       newMessage: "",
-      chatroom: "1",
+      inbox_id: "2",
       connEnable: false,
     };
   },
@@ -85,7 +107,7 @@ export default {
       this.connEnable = true;
       this.getMessages();
       // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
-      Echo.private('chatuser.'+ this.chatroom).listen("OrderShipped", (e) => {
+      Echo.private("chatuser." + this.inbox_id).listen("OrderShipped", (e) => {
         this.getMessages();
       });
     },
@@ -96,7 +118,7 @@ export default {
           recipient_id: "2",
           user_name: this.user_name,
           message: this.newMessage,
-          chatroom_id: this.chatroom,
+          chatroom_id: this.inbox_id,
         })
         .then(
           (response) => {
@@ -113,7 +135,7 @@ export default {
     },
     getMessages() {
       axios
-        .get("/api/getmessage")
+        .get("/api/getmessage/" + this.inbox_id)
         .then((response) => {
           this.messages = response.data;
         })

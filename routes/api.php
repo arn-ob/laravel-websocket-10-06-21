@@ -19,4 +19,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/message', 'App\Http\Controllers\MessageController@broadcast');
-Route::get('/getmessage', 'App\Http\Controllers\MessageController@getmessage');
+Route::get('/getmessage/{chatroom}', 'App\Http\Controllers\MessageController@getmessage');

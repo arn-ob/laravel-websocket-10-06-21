@@ -1913,6 +1913,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ["usernames", "user_id"],
   data: function data() {
@@ -1922,7 +1944,7 @@ __webpack_require__.r(__webpack_exports__);
       // Math.random().toString(36).slice(-5),
       messages: [],
       newMessage: "",
-      chatroom: "1",
+      inbox_id: "2",
       connEnable: false
     };
   },
@@ -1934,7 +1956,7 @@ __webpack_require__.r(__webpack_exports__);
       this.connEnable = true;
       this.getMessages(); // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
 
-      Echo["private"]('chatuser.' + this.chatroom).listen("OrderShipped", function (e) {
+      Echo["private"]("chatuser." + this.inbox_id).listen("OrderShipped", function (e) {
         _this.getMessages();
       });
     },
@@ -1946,7 +1968,7 @@ __webpack_require__.r(__webpack_exports__);
         recipient_id: "2",
         user_name: this.user_name,
         message: this.newMessage,
-        chatroom_id: this.chatroom
+        chatroom_id: this.inbox_id
       }).then(function (response) {
         _this2.messages.push({
           message: _this2.newMessage,
@@ -1961,7 +1983,7 @@ __webpack_require__.r(__webpack_exports__);
     getMessages: function getMessages() {
       var _this3 = this;
 
-      axios.get("/api/getmessage").then(function (response) {
+      axios.get("/api/getmessage/" + this.inbox_id).then(function (response) {
         _this3.messages = response.data;
       })["catch"](function (error) {
         console.log(error);
@@ -44026,42 +44048,74 @@ var render = function() {
     }),
     _vm._v(" "),
     _c("div", { staticClass: "box" }, [
-      _c(
-        "div",
-        { staticClass: "form-group" },
-        [
-          _c("div", { staticStyle: { "margin-bottom": "20px" } }, [
-            _c("label", { attrs: { for: "username_1" } }, [
-              _vm._v("Your name")
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.user_name,
-                  expression: "user_name"
-                }
-              ],
-              staticClass: "form-control",
-              staticStyle: { "margin-bottom": "5px" },
-              attrs: { type: "text" },
-              domProps: { value: _vm.user_name },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+      _c("div", { staticClass: "form-group" }, [
+        _c("div", { staticStyle: { "margin-bottom": "20px" } }, [
+          _c("div", { staticClass: "container" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-sm" }, [
+                _c("label", { attrs: { for: "username_1" } }, [
+                  _vm._v("Your name")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.user_name,
+                      expression: "user_name"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  staticStyle: { "margin-bottom": "5px" },
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.user_name },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.user_name = $event.target.value
+                    }
                   }
-                  _vm.user_name = $event.target.value
-                }
-              }
-            }),
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-sm" }, [
+                _c("label", { attrs: { for: "username_1" } }, [
+                  _vm._v("Select Inbox ID")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.inbox_id,
+                      expression: "inbox_id"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  staticStyle: { "margin-bottom": "5px" },
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.inbox_id },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.inbox_id = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
             _vm._v(" "),
             _c(
               "button",
               {
                 staticClass: "btn btn-primary",
+                staticStyle: { "margin-top": "10px" },
                 attrs: { type: "button" },
                 on: {
                   click: function($event) {
@@ -44069,104 +44123,113 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("\n          Join\n        ")]
+              [_vm._v("\n            Join\n          ")]
             )
-          ]),
-          _vm._v(" "),
-          _vm._l(_vm.messages, function(message) {
-            return _c(
-              "div",
-              [
-                message.username == _vm.user_name
-                  ? _c("my-message", {
-                      attrs: {
-                        message: message.message,
-                        user: message.username
-                      }
-                    })
-                  : _vm._e(),
-                _vm._v(" "),
-                message.username != _vm.user_name
-                  ? _c("message", {
-                      attrs: {
-                        message: message.message,
-                        user: message.username
-                      }
-                    })
-                  : _vm._e()
-              ],
-              1
-            )
-          }),
-          _vm._v(" "),
-          _vm.connEnable == true
-            ? _c(
-                "form",
-                {
-                  on: {
-                    submit: function($event) {
-                      $event.preventDefault()
-                      return _vm.submit.apply(null, arguments)
-                    }
-                  }
-                },
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "container" },
+          [
+            _vm._l(_vm.messages, function(message) {
+              return _c(
+                "div",
                 [
-                  _c(
-                    "div",
-                    { staticClass: "field has-addons has-addons-fullwidth" },
-                    [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "control is-expanded",
-                          staticStyle: { width: "94%" }
-                        },
-                        [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.newMessage,
-                                expression: "newMessage"
-                              }
-                            ],
-                            staticClass: "input",
-                            attrs: {
-                              type: "text",
-                              placeholder: "Type a message"
-                            },
-                            domProps: { value: _vm.newMessage },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.newMessage = $event.target.value
-                              }
-                            }
-                          })
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "control" }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "button is-danger",
-                            attrs: { type: "submit", disabled: !_vm.newMessage }
-                          },
-                          [_vm._v("\n              Send\n            ")]
-                        )
-                      ])
-                    ]
-                  )
-                ]
+                  message.username == _vm.user_name
+                    ? _c("my-message", {
+                        attrs: {
+                          message: message.message,
+                          user: message.username
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  message.username != _vm.user_name
+                    ? _c("message", {
+                        attrs: {
+                          message: message.message,
+                          user: message.username
+                        }
+                      })
+                    : _vm._e()
+                ],
+                1
               )
-            : _vm._e()
-        ],
-        2
-      )
+            }),
+            _vm._v(" "),
+            _vm.connEnable == true
+              ? _c(
+                  "form",
+                  {
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.submit.apply(null, arguments)
+                      }
+                    }
+                  },
+                  [
+                    _c(
+                      "div",
+                      { staticClass: "field has-addons has-addons-fullwidth" },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "control is-expanded",
+                            staticStyle: { width: "94%" }
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.newMessage,
+                                  expression: "newMessage"
+                                }
+                              ],
+                              staticClass: "input",
+                              attrs: {
+                                type: "text",
+                                placeholder: "Type a message"
+                              },
+                              domProps: { value: _vm.newMessage },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.newMessage = $event.target.value
+                                }
+                              }
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "control" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "button is-danger",
+                              attrs: {
+                                type: "submit",
+                                disabled: !_vm.newMessage
+                              }
+                            },
+                            [_vm._v("\n                Send\n              ")]
+                          )
+                        ])
+                      ]
+                    )
+                  ]
+                )
+              : _vm._e()
+          ],
+          2
+        )
+      ])
     ])
   ])
 }
