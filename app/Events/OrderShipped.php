@@ -19,10 +19,11 @@ class OrderShipped
      *
      * @return void
      */
-    public function __construct($message, $user)
+    public function __construct($message, $user, $chatroom_id)
     {
         $this->message = $message;
         $this->user = $user;
+        $this->$chatroom_id = $chatroom_id;
     }
 
     /**
@@ -32,6 +33,6 @@ class OrderShipped
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('private-chatuser.'.$this->user);
+        return new PrivateChannel('chatuser.'.$this->chatroom_id);
     }
 }

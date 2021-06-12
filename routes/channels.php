@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,8 @@ use Illuminate\Support\Facades\Log;
 // });
 
 
-Broadcast::channel('chatuser.{id}', function ($user, $id) {
-    return true;
+Broadcast::channel('chatuser.{roomId}', function ($user,$roomId) {
+    if(Auth::check()){
+    	return true;
+    }
 });

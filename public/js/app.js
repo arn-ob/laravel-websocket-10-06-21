@@ -1913,13 +1913,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['usernames'],
+  props: ['usernames', 'user_id'],
   data: function data() {
     return {
-      userId: this.usernames,
+      id: this.user_id,
+      user_name: this.usernames,
       // Math.random().toString(36).slice(-5),
       messages: [],
       newMessage: "",
+      chatroom: "1",
       connEnable: false
     };
   },
@@ -1930,11 +1932,9 @@ __webpack_require__.r(__webpack_exports__);
 
       this.connEnable = true; // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
 
-      Echo["private"]("private-chatuser." + this.userId).listen("OrderShipped", function (e) {
+      Echo["private"]("chatuser." + this.chatroom).listen("OrderShipped", function (e) {
         // Private Channel
-        console.log(e);
-
-        if (e.user != _this.userId) {
+        if (e.user != _this.user_name) {
           _this.messages.push({
             text: e.message,
             user: e.user
@@ -1946,12 +1946,14 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       axios.post("/api/message", {
-        user: this.userId,
-        message: this.newMessage
+        user_id: this.id,
+        user_name: this.user_name,
+        message: this.newMessage,
+        chatroom_id: this.chatroom
       }).then(function (response) {
         _this2.messages.push({
           text: _this2.newMessage,
-          user: _this2.userId
+          user: _this2.user_name
         });
 
         _this2.newMessage = "";
@@ -44032,20 +44034,20 @@ var render = function() {
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.userId,
-                  expression: "userId"
+                  value: _vm.user_name,
+                  expression: "user_name"
                 }
               ],
               staticClass: "form-control",
               staticStyle: { "margin-bottom": "5px" },
               attrs: { type: "text" },
-              domProps: { value: _vm.userId },
+              domProps: { value: _vm.user_name },
               on: {
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
-                  _vm.userId = $event.target.value
+                  _vm.user_name = $event.target.value
                 }
               }
             }),
@@ -44069,13 +44071,13 @@ var render = function() {
             return _c(
               "div",
               [
-                message.user == _vm.userId
+                message.user == _vm.user_name
                   ? _c("my-message", {
                       attrs: { message: message.text, user: message.user }
                     })
                   : _vm._e(),
                 _vm._v(" "),
-                message.user != _vm.userId
+                message.user != _vm.user_name
                   ? _c("message", {
                       attrs: { message: message.text, user: message.user }
                     })

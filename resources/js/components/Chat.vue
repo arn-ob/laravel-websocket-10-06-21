@@ -13,7 +13,7 @@
           <input
             type="text"
             class="form-control"
-            v-model="userId"
+            v-model="user_name"
             style="margin-bottom: 5px"
           />
           <button 
@@ -27,13 +27,13 @@
 
         <div v-for="message in messages">
           <my-message
-            v-if="message.user == userId"
+            v-if="message.user == user_name"
             :message="message.text"
             :user="message.user"
           ></my-message>
 
           <message
-            v-if="message.user != userId"
+            v-if="message.user != user_name"
             :message="message.text"
             :user="message.user"
           ></message>
@@ -67,12 +67,14 @@
 
 <script>
 export default {
-  props: ['usernames'],
+  props: ['usernames', 'user_id'],
   data() {
     return {
-      userId: this.usernames, // Math.random().toString(36).slice(-5),
+      id: this.user_id,
+      user_name: this.usernames, // Math.random().toString(36).slice(-5),
       messages: [],
       newMessage: "",
+      chatroom: "1",
       connEnable: false,
     };
   },
@@ -81,9 +83,8 @@ export default {
     connection() {
       this.connEnable = true 
       // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
-      Echo.private(`private-chatuser.`+ this.userId).listen("OrderShipped", (e) => {     // Private Channel
-        console.log(e)
-        if (e.user != this.userId) {
+      Echo.private(`chatuser.`+ this.chatroom).listen("OrderShipped", (e) => {     // Private Channel
+        if (e.user != this.user_name) {
           this.messages.push({ text: e.message, user: e.user });
         }
       });
@@ -91,14 +92,16 @@ export default {
     submit() {
       axios
         .post(`/api/message`, {
-          user: this.userId,
+          user_id: this.id, 
+          user_name: this.user_name,
           message: this.newMessage,
+          chatroom_id: this.chatroom
         })
         .then(
           (response) => {
             this.messages.push({
               text: this.newMessage,
-              user: this.userId,
+              user: this.user_name,
             });
             this.newMessage = "";
           },

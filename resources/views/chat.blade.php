@@ -4,7 +4,7 @@
 
 <section class="section">
     <div id="app" class="container">
-        <chat usernames={{ Auth::user()->name }}></chat>
+        <chat usernames={{ Auth::user()->name }} user_id={{ Auth::user()->id }}></chat>
     </div>
 </section>
 
