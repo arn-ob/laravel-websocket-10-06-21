@@ -20,8 +20,10 @@ use Illuminate\Support\Facades\Auth;
 // });
 
 
-Broadcast::channel('chatuser.{roomId}', function ($user,$roomId) {
+Broadcast::channel('chatuser.{chatMessage}', function ($user, $chatMessage) {
     if(Auth::check()){
-    	return true;
+        // error_log($user->id);
+        // error_log($user->name);
+        return [ 'id'=>$user->id, 'name'=>$user->name ];
     }
 });

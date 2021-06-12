@@ -9,21 +9,21 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use App\Models\ChatMessage;
 
 class OrderShipped
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+    private $chatMessage;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($message, $user, $chatroom_id)
+    public function __construct(ChatMessage $chatMessage)
     {
-        $this->message = $message;
-        $this->user = $user;
-        $this->$chatroom_id = $chatroom_id;
+        $this->chatMessage = $chatMessage;
     }
 
     /**
@@ -33,6 +33,6 @@ class OrderShipped
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('chatuser.'.$this->chatroom_id);
+        return new PrivateChannel('chatuser.'.$this->chatMessage->chatroom_id);
     }
 }

@@ -1934,15 +1934,9 @@ __webpack_require__.r(__webpack_exports__);
       this.connEnable = true;
       this.getMessages(); // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
 
-      Echo["private"]("chatuser." + this.chatroom).listen("OrderShipped", function (e) {
-        // Private Channel
-        if (e.user != _this.user_name) {
-          _this.messages.push({
-            message: e.message,
-            username: e.user
-          });
-        }
-      });
+      Echo["private"]('chatuser.' + this.chatroom).listen("OrderShipped", function (e) {
+        _this.getMessages();
+      }).listen().listen();
     },
     submit: function submit() {
       var _this2 = this;

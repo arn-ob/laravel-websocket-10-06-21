@@ -83,15 +83,11 @@ export default {
   methods: {
     connection() {
       this.connEnable = true;
-      this.getMessages()
+      this.getMessages();
       // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
-      Echo.private(`chatuser.` + this.chatroom).listen("OrderShipped", (e) => {
-        
-        // Private Channel
-        if (e.user != this.user_name) {
-          this.messages.push({ message: e.message, username: e.user });
-        }
-      });
+      Echo.private('chatuser.'+ this.chatroom).listen("OrderShipped", (e) => {
+        this.getMessages();
+      }).listen().listen();
     },
     submit() {
       axios
