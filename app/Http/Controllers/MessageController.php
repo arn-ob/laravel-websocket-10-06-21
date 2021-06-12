@@ -27,4 +27,8 @@ class MessageController extends Controller
 
         return response()->json(["broadcast" => "true"], 200);
     }
+
+    public function getmessage(Request $request) {
+        return ChatMessage::where('chatroom_id', "1")->get();
+    }
 }

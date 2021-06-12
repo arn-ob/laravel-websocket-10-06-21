@@ -7,7 +7,6 @@
 
     <div class="box">
       <div class="form-group">
-        
         <div style="margin-bottom: 20px">
           <label for="username_1">Your name</label>
           <input
@@ -16,26 +15,28 @@
             v-model="user_name"
             style="margin-bottom: 5px"
           />
-          <button 
-            type="button" 
-            class="btn btn-primary" 
+          <button
+            type="button"
+            class="btn btn-primary"
             v-on:click="connection()"
-          > Join </button>
+          >
+            Join
+          </button>
         </div>
 
         <!-- <p v-if="!messages.length">Start typing the first message</p> -->
 
         <div v-for="message in messages">
           <my-message
-            v-if="message.user == user_name"
-            :message="message.text"
-            :user="message.user"
+            v-if="message.username == user_name"
+            :message="message.message"
+            :user="message.username"
           ></my-message>
 
           <message
-            v-if="message.user != user_name"
-            :message="message.text"
-            :user="message.user"
+            v-if="message.username != user_name"
+            :message="message.message"
+            :user="message.username"
           ></message>
         </div>
 
@@ -67,7 +68,7 @@
 
 <script>
 export default {
-  props: ['usernames', 'user_id'],
+  props: ["usernames", "user_id"],
   data() {
     return {
       id: this.user_id,
@@ -81,27 +82,30 @@ export default {
   mounted() {},
   methods: {
     connection() {
-      this.connEnable = true 
+      this.connEnable = true;
+      this.getMessages()
       // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
-      Echo.private(`chatuser.`+ this.chatroom).listen("OrderShipped", (e) => {     // Private Channel
+      Echo.private(`chatuser.` + this.chatroom).listen("OrderShipped", (e) => {
+        
+        // Private Channel
         if (e.user != this.user_name) {
-          this.messages.push({ text: e.message, user: e.user });
+          this.messages.push({ message: e.message, username: e.user });
         }
       });
     },
     submit() {
       axios
         .post(`/api/message`, {
-          user_id: this.id, 
+          user_id: this.id,
           user_name: this.user_name,
           message: this.newMessage,
-          chatroom_id: this.chatroom
+          chatroom_id: this.chatroom,
         })
         .then(
           (response) => {
             this.messages.push({
-              text: this.newMessage,
-              user: this.user_name,
+              message: this.newMessage,
+              username: this.user_name,
             });
             this.newMessage = "";
           },
@@ -109,6 +113,16 @@ export default {
             console.log(error);
           }
         );
+    },
+    getMessages() {
+      axios
+        .get("/api/getmessage")
+        .then((response) => {
+          this.messages = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };

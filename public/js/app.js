@@ -1912,8 +1912,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['usernames', 'user_id'],
+  props: ["usernames", "user_id"],
   data: function data() {
     return {
       id: this.user_id,
@@ -1930,14 +1931,15 @@ __webpack_require__.r(__webpack_exports__);
     connection: function connection() {
       var _this = this;
 
-      this.connEnable = true; // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
+      this.connEnable = true;
+      this.getMessages(); // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
 
       Echo["private"]("chatuser." + this.chatroom).listen("OrderShipped", function (e) {
         // Private Channel
         if (e.user != _this.user_name) {
           _this.messages.push({
-            text: e.message,
-            user: e.user
+            message: e.message,
+            username: e.user
           });
         }
       });
@@ -1952,12 +1954,21 @@ __webpack_require__.r(__webpack_exports__);
         chatroom_id: this.chatroom
       }).then(function (response) {
         _this2.messages.push({
-          text: _this2.newMessage,
-          user: _this2.user_name
+          message: _this2.newMessage,
+          username: _this2.user_name
         });
 
         _this2.newMessage = "";
       }, function (error) {
+        console.log(error);
+      });
+    },
+    getMessages: function getMessages() {
+      var _this3 = this;
+
+      axios.get("/api/getmessage").then(function (response) {
+        _this3.messages = response.data;
+      })["catch"](function (error) {
         console.log(error);
       });
     }
@@ -44063,7 +44074,7 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v(" Join ")]
+              [_vm._v("\n          Join\n        ")]
             )
           ]),
           _vm._v(" "),
@@ -44071,15 +44082,21 @@ var render = function() {
             return _c(
               "div",
               [
-                message.user == _vm.user_name
+                message.username == _vm.user_name
                   ? _c("my-message", {
-                      attrs: { message: message.text, user: message.user }
+                      attrs: {
+                        message: message.message,
+                        user: message.username
+                      }
                     })
                   : _vm._e(),
                 _vm._v(" "),
-                message.user != _vm.user_name
+                message.username != _vm.user_name
                   ? _c("message", {
-                      attrs: { message: message.text, user: message.user }
+                      attrs: {
+                        message: message.message,
+                        user: message.username
+                      }
                     })
                   : _vm._e()
               ],
