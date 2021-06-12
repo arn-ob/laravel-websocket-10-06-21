@@ -16,6 +16,7 @@ class Chatmessage extends Migration
         Schema::create('chat_messages', function (Blueprint $table) {
             $table->id();
             $table->text('user_id');
+            $table->text('recipient_id');
             $table->text('chatroom_id');
             $table->text('username');
             $table->text('message');

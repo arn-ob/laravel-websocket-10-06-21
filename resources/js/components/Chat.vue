@@ -87,12 +87,13 @@ export default {
       // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
       Echo.private('chatuser.'+ this.chatroom).listen("OrderShipped", (e) => {
         this.getMessages();
-      }).listen().listen();
+      });
     },
     submit() {
       axios
         .post(`/api/message`, {
           user_id: this.id,
+          recipient_id: "2",
           user_name: this.user_name,
           message: this.newMessage,
           chatroom_id: this.chatroom,

@@ -17,6 +17,7 @@ class MessageController extends Controller
 
         $newMessage = new ChatMessage();
     	$newMessage->user_id = $request->user_id;
+        $newMessage->recipient_id = $request->recipient_id;
         $newMessage->username = $request->user_name;
     	$newMessage->chatroom_id = $request->chatroom_id;
     	$newMessage->message = $request->message;

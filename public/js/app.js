@@ -1936,13 +1936,14 @@ __webpack_require__.r(__webpack_exports__);
 
       Echo["private"]('chatuser.' + this.chatroom).listen("OrderShipped", function (e) {
         _this.getMessages();
-      }).listen().listen();
+      });
     },
     submit: function submit() {
       var _this2 = this;
 
       axios.post("/api/message", {
         user_id: this.id,
+        recipient_id: "2",
         user_name: this.user_name,
         message: this.newMessage,
         chatroom_id: this.chatroom

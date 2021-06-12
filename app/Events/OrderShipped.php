@@ -33,6 +33,6 @@ class OrderShipped
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('chatuser.'.$this->chatMessage->chatroom_id);
+        return new PresenceChannel('chatuser.2');
     }
 }
