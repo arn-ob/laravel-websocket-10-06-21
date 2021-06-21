@@ -12,10 +12,11 @@
 
     <section class="section">
         <div id="app" class="container">
-            <chat usernames="guest" user_id="33"></chat>
+            <chatguest></chatguest>
         </div>
     </section>
 
 
     <script src="{{ asset('js/app.js') }}"></script>
+    
 </div>

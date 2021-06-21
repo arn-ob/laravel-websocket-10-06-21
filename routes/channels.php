@@ -31,5 +31,6 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 // });
 
 Broadcast::channel('chatuser.{chatMessage}', function ($user, $chatMessage) {
+    Log::error($user);
     return $user;
 });
