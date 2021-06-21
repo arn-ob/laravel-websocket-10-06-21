@@ -108,7 +108,7 @@ export default {
       this.getMessages();
       // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
       Echo.private("chatuser." + this.inbox_id).listen("OrderShipped", (e) => {
-        // this.messages.push({ message: this.newMessage, username: this.user_name });
+        this.messages.push({ message: this.newMessage, username: this.user_name });
         this.getMessages();
       });
     },

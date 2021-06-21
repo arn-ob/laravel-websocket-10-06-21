@@ -1957,7 +1957,11 @@ __webpack_require__.r(__webpack_exports__);
       this.getMessages(); // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
 
       Echo["private"]("chatuser." + this.inbox_id).listen("OrderShipped", function (e) {
-        // this.messages.push({ message: this.newMessage, username: this.user_name });
+        _this.messages.push({
+          message: _this.newMessage,
+          username: _this.user_name
+        });
+
         _this.getMessages();
       });
     },
@@ -2128,12 +2132,10 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   broadcaster: 'pusher',
-  key: "local",
-  cluster: "mt1",
-  wsHost: window.location.hostname,
-  wsPort: "6001",
+  key: "a450962c2b0d777d14e1",
+  cluster: "ap2",
   enabledTransports: ['ws'],
-  forceTLS: false // this convert wss to ws
+  forceTLS: true // this convert wss to ws
   // auth: {
   //     headers: {
   //         Authorization: 'Bearer ' + "asdasdasdasdweqweasdasgefasdz"
