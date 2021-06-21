@@ -21,6 +21,8 @@ Route::get('/', function () {
 
 Route::get('/chats', 'MessageController@broadcast');
 
+Route::get('/chatguest', function () { return view('chatguest'); })->name('chatguest');
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

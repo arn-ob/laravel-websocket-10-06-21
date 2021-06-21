@@ -36,6 +36,9 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         @guest
+                            <li class="nav-item">
+                                <a style="color: black" class="nav-link" href="{{ route('chat') }}">Chat</a>
+                            </li>
                         @else
                             <li class="nav-item">
                                 <a style="color: black" class="nav-link" href="{{ route('chat') }}">Chat</a>

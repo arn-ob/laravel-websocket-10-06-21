@@ -5,17 +5,14 @@
         <h5 class="my-0 mr-md-auto font-weight-normal">Laravel</h5>
         <nav class="my-2 my-md-0 mr-md-3">
             <p class="p-2 text-dark">
-            @guest
-            @else
-                {{ Auth::user()->name }}
-            @endguest
+            Guest
             </p>
         </nav>
     </div>
 
     <section class="section">
         <div id="app" class="container">
-            <chat usernames={{ Auth::user()->name }} user_id={{ Auth::user()->id }}></chat>
+            <chat usernames="guest" user_id="33"></chat>
         </div>
     </section>
 
