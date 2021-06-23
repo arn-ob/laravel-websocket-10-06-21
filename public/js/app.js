@@ -1932,9 +1932,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ["usernames", "user_id"],
   data: function data() {
@@ -1944,8 +1941,9 @@ __webpack_require__.r(__webpack_exports__);
       // Math.random().toString(36).slice(-5),
       messages: [],
       newMessage: "",
-      inbox_id: "2",
-      connEnable: false
+      inbox_id: String(Number(new Date())),
+      connEnable: false,
+      socket_id: ""
     };
   },
   mounted: function mounted() {},
@@ -1954,26 +1952,24 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.connEnable = true;
-      this.getMessages(); // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
-
+      this.getMessages();
       Echo["private"]("chatuser." + this.inbox_id).listen("OrderShipped", function (e) {
-        _this.messages.push({
-          message: _this.newMessage,
-          username: _this.user_name
-        });
-
+        // If data needed
+        // this.messages.push({ message: this.newMessage, username: this.user_name });
         _this.getMessages();
       });
+      this.socket_id = window.Echo.socketId();
     },
     submit: function submit() {
       var _this2 = this;
 
       axios.post("/api/message", {
         user_id: this.id,
-        recipient_id: "2",
+        recipient_id: "1",
         user_name: this.user_name,
         message: this.newMessage,
-        chatroom_id: this.inbox_id
+        chatroom_id: this.inbox_id,
+        socket_id: this.socket_id
       }).then(function (response) {
         _this2.messages.push({
           message: _this2.newMessage,
@@ -1988,8 +1984,9 @@ __webpack_require__.r(__webpack_exports__);
     getMessages: function getMessages() {
       var _this3 = this;
 
-      axios.get("/api/getmessage/" + this.inbox_id).then(function (response) {
+      axios.get("/api/getmessage/".concat(this.inbox_id)).then(function (response) {
         _this3.messages = response.data;
+        console.log("Get Message ", _this3.messages);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -2063,6 +2060,7 @@ __webpack_require__.r(__webpack_exports__);
       data.append("email", this.newEmail);
       data.append("password", this.newEmail);
       data.append("password_confirmation", this.newEmail);
+      data.append("user_type", "guest");
       axios.post("http://127.0.0.1:8000/register", data).then(function (response) {
         window.location.href = "/chat";
       })["catch"](function (error) {
@@ -44233,8 +44231,8 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "col-sm" }, [
-                _c("label", { attrs: { for: "username_1" } }, [
-                  _vm._v("Select Inbox ID")
+                _c("label", { attrs: { for: "inbox_id_1" } }, [
+                  _vm._v("Inbox ID")
                 ]),
                 _vm._v(" "),
                 _c("input", {
@@ -44286,6 +44284,7 @@ var render = function() {
             _vm._l(_vm.messages, function(message) {
               return _c(
                 "div",
+                { key: message.id },
                 [
                   message.username == _vm.user_name
                     ? _c("my-message", {
@@ -44430,7 +44429,7 @@ var render = function() {
             }
           ],
           staticClass: "form-control",
-          attrs: { type: "text", placeholder: "Enter email" },
+          attrs: { type: "text", placeholder: "Name" },
           domProps: { value: _vm.newUser },
           on: {
             input: function($event) {

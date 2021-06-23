@@ -10,6 +10,7 @@
         <div style="margin-bottom: 20px">
           <div class="container">
             
+            <!-- Information -->
             <div class="row">
               <div class="col-sm">
                 <label for="username_1">Your name</label>
@@ -21,7 +22,7 @@
                 />
               </div>
               <div class="col-sm">
-                <label for="username_1">Select Inbox ID</label>
+                <label for="inbox_id_1">Inbox ID</label>
                 <input
                   type="text"
                   class="form-control"
@@ -39,13 +40,11 @@
             >
               Join
             </button>
-          
           </div>
         </div>
 
         <div class="container">
-        
-          <div v-for="message in messages">
+          <div v-for="message in messages" :key="message.id">
             <my-message
               v-if="message.username == user_name"
               :message="message.message"
@@ -80,9 +79,7 @@
               </div>
             </div>
           </form>
-        
         </div>
-
       </div>
     </div>
   </div>
@@ -97,8 +94,9 @@ export default {
       user_name: this.usernames, // Math.random().toString(36).slice(-5),
       messages: [],
       newMessage: "",
-      inbox_id: "2",
+      inbox_id: String(Number(new Date())),
       connEnable: false,
+      socket_id: "",
     };
   },
   mounted() {},
@@ -106,20 +104,22 @@ export default {
     connection() {
       this.connEnable = true;
       this.getMessages();
-      // Echo.channel(`chat`).listen("NewChatMessage", (e) => {          // Public  Channel
       Echo.private("chatuser." + this.inbox_id).listen("OrderShipped", (e) => {
-        this.messages.push({ message: this.newMessage, username: this.user_name });
+        // If data needed
+        // this.messages.push({ message: this.newMessage, username: this.user_name });
         this.getMessages();
       });
+      this.socket_id = window.Echo.socketId();
     },
     submit() {
       axios
         .post(`/api/message`, {
           user_id: this.id,
-          recipient_id: "2",
+          recipient_id: "1",
           user_name: this.user_name,
           message: this.newMessage,
           chatroom_id: this.inbox_id,
+          socket_id: this.socket_id,
         })
         .then(
           (response) => {
@@ -136,9 +136,10 @@ export default {
     },
     getMessages() {
       axios
-        .get("/api/getmessage/" + this.inbox_id)
+        .get(`/api/getmessage/${this.inbox_id}`)
         .then((response) => {
           this.messages = response.data;
+          console.log("Get Message ", this.messages)
         })
         .catch((error) => {
           console.log(error);

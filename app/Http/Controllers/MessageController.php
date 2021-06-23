@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Events\NewChatMessage;
 use App\Events\OrderShipped;
 use App\Models\ChatMessage;
@@ -20,6 +21,7 @@ class MessageController extends Controller
         $newMessage->recipient_id = $request->recipient_id;
         $newMessage->username = $request->user_name;
     	$newMessage->chatroom_id = $request->chatroom_id;
+        $newMessage->socket_id = $request->socket_id;
     	$newMessage->message = $request->message;
     	$newMessage->save();
 
@@ -29,10 +31,23 @@ class MessageController extends Controller
         return response()->json(["broadcast" => "true"], 200);
     }
 
-    public function getmessage(Request $request, $chatroom) {
+    /**
+     * 
+     */
+    public function getmessage(Request $request) {
         // Checking chatroom
-        error_log($chatroom);
-        
-        return ChatMessage::where('chatroom_id', $chatroom)->get();
+        // error_log($request->chatroom);
+        // return ChatMessage::join("users", "chatroom.id", "=", "users.id")->where('chatroom_id', $request->chatroom)->get();
+        return DB::Table("chat_messages")
+            ->join('users', "users.id", "=", "chat_messages.user_id")
+            ->where('chat_messages.chatroom_id', $request->chatroom)
+            ->get();
+    }
+
+    /**
+     * @param Request Socket ID
+     */
+    public function updatedChatRoom(Request $request) {
+        return ChatMessage::where('user_id', $request->user_id)->update(["chatroom_id" => $request->socketID]);
     }
 }

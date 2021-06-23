@@ -11,7 +11,7 @@
         <input
           type="text"
           class="form-control"
-          placeholder="Enter email"
+          placeholder="Name"
           v-model="newUser"
         />
       </div>
@@ -52,6 +52,7 @@ export default {
       data.append("email", this.newEmail);
       data.append("password", this.newEmail);
       data.append("password_confirmation", this.newEmail);
+      data.append("user_type", "guest")
 
       axios
         .post(`http://127.0.0.1:8000/register`, data)

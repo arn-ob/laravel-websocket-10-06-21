@@ -18,11 +18,12 @@ class Chatmessage extends Migration
             $table->text('user_id');
             $table->text('recipient_id');
             $table->text('chatroom_id');
+            $table->text('socket_id');
             $table->text('username');
             $table->text('message');
+            $table->string('user_type')->default("admin");
             $table->timestamp('updated_at')->nullable();
             $table->timestamp('created_at')->nullable();
-            $table->text('test1')->nullable();
         });
     }
 
