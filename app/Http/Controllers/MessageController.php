@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Events\NewChatMessage;
 use App\Events\OrderShipped;
 use App\Models\ChatMessage;
 
@@ -25,7 +24,6 @@ class MessageController extends Controller
     	$newMessage->message = $request->message;
     	$newMessage->save();
 
-        // event(new NewChatMessage($request->message, $request->user_name));  // Public Channel
         event(new OrderShipped($newMessage)); // Private Channel
 
         return response()->json(["broadcast" => "true"], 200);
@@ -48,6 +46,20 @@ class MessageController extends Controller
      * @param Request Socket ID
      */
     public function updatedChatRoom(Request $request) {
-        return ChatMessage::where('user_id', $request->user_id)->update(["chatroom_id" => $request->socketID]);
+        return ChatMessage::where('user_id', $request->user_id)
+            ->update(["chatroom_id" => $request->socketID]);
     }
+
+    /**
+     * @param 
+     */
+    public function getAllChatRoom(Request $request) {
+        $list =  ChatMessage::all()->unique("chatroom_id");
+        $listing = collect();
+        foreach ($list as $list) {
+            $listing->push($list);
+        }
+        return ["chatroom" => $listing];
+    }
+
 }
