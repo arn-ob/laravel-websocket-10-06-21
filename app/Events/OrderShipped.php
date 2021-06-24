@@ -37,4 +37,9 @@ class OrderShipped implements ShouldBroadcast
     {
         return new PrivateChannel('chatuser.'.$this->chatMessage->chatroom_id);
     }
+
+    public function broadcastWith()
+    {
+        return [$this->chatMessage];
+    }
 }

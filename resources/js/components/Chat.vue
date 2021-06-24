@@ -106,8 +106,11 @@ export default {
       this.getMessages();
       Echo.private("chatuser." + this.inbox_id).listen("OrderShipped", (e) => {
         // If data needed
-        // this.messages.push({ message: this.newMessage, username: this.user_name });
-        this.getMessages();
+        let data = Array.isArray(e) ? e[0] : {}
+        this.messages.push({ 
+          username: data?.username || "", 
+          message: data?.message || "", 
+        });
       });
       this.socket_id = window.Echo.socketId();
     },

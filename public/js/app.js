@@ -1955,8 +1955,12 @@ __webpack_require__.r(__webpack_exports__);
       this.getMessages();
       Echo["private"]("chatuser." + this.inbox_id).listen("OrderShipped", function (e) {
         // If data needed
-        // this.messages.push({ message: this.newMessage, username: this.user_name });
-        _this.getMessages();
+        var data = Array.isArray(e) ? e[0] : {};
+
+        _this.messages.push({
+          username: (data === null || data === void 0 ? void 0 : data.username) || "",
+          message: (data === null || data === void 0 ? void 0 : data.message) || ""
+        });
       });
       this.socket_id = window.Echo.socketId();
     },
