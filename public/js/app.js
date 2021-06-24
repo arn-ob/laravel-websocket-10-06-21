@@ -1953,7 +1953,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.connEnable = true;
       this.getMessages();
-      Echo["private"]("chatuser." + this.inbox_id).listen("MessageShipped", function (e) {
+      Echo["private"]("chatuser." + this.inbox_id).listen(".message.broadcasting", function (e) {
         // If data needed
         var data = Array.isArray(e) ? e[0] : {};
 

@@ -35,11 +35,21 @@ class MessageShipped implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('chatuser.'.$this->chatMessage->chatroom_id);
+        return new PrivateChannel('chatuser.' . $this->chatMessage->chatroom_id);
     }
 
     public function broadcastWith()
     {
         return [$this->chatMessage];
+    }
+
+    /**
+     * The event's broadcast name.
+     *
+     * @return string
+     */
+    public function broadcastAs()
+    {
+        return 'message.broadcasting';
     }
 }
