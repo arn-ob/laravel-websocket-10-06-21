@@ -104,7 +104,7 @@ export default {
     connection() {
       this.connEnable = true;
       this.getMessages();
-      Echo.private("chatuser." + this.inbox_id).listen("OrderShipped", (e) => {
+      Echo.private("chatuser." + this.inbox_id).listen("MessageShipped", (e) => {
         // If data needed
         let data = Array.isArray(e) ? e[0] : {}
         this.messages.push({ 
@@ -126,10 +126,6 @@ export default {
         })
         .then(
           (response) => {
-            this.messages.push({
-              message: this.newMessage,
-              username: this.user_name,
-            });
             this.newMessage = "";
           },
           (error) => {

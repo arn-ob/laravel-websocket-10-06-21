@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Events\OrderShipped;
+use App\Events\MessageShipped;
 use App\Models\ChatMessage;
 
 class MessageController extends Controller
@@ -24,7 +24,7 @@ class MessageController extends Controller
     	$newMessage->message = $request->message;
     	$newMessage->save();
 
-        event(new OrderShipped($newMessage)); // Private Channel
+        event(new MessageShipped($newMessage)); // Private Channel
 
         return response()->json(["broadcast" => "true"], 200);
     }

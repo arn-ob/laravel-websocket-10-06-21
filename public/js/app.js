@@ -1953,7 +1953,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.connEnable = true;
       this.getMessages();
-      Echo["private"]("chatuser." + this.inbox_id).listen("OrderShipped", function (e) {
+      Echo["private"]("chatuser." + this.inbox_id).listen("MessageShipped", function (e) {
         // If data needed
         var data = Array.isArray(e) ? e[0] : {};
 
@@ -1975,11 +1975,6 @@ __webpack_require__.r(__webpack_exports__);
         chatroom_id: this.inbox_id,
         socket_id: this.socket_id
       }).then(function (response) {
-        _this2.messages.push({
-          message: _this2.newMessage,
-          username: _this2.user_name
-        });
-
         _this2.newMessage = "";
       }, function (error) {
         console.log(error);

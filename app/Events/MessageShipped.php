@@ -13,7 +13,7 @@ use App\Models\ChatMessage;
 
 
 // Needed to implements ShouldBroadcast from Event dispatch
-class OrderShipped implements ShouldBroadcast
+class MessageShipped implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     private $chatMessage;
