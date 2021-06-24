@@ -22,6 +22,7 @@ window.Vue = require('vue').default;
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
 Vue.component('chat', require('./components/Chat.vue').default);
+Vue.component('chatguest', require('./components/Chatguest.vue').default);
 Vue.component('my-message', require('./components/MyMessage.vue').default);
 Vue.component('message', require('./components/Message.vue').default);
 

@@ -1,8 +1,7 @@
 <?php
 
-use App\Events\Hello;
-use App\Events\NewChatMessage;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +18,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/chat', function () {
-    return view('chat');
-});
-
 Route::get('/chats', 'MessageController@broadcast');
 
+Route::get('/chatguest', function () { return view('chatguest'); })->name('chatguest');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/chat', function () { return view('chat'); })->name('chat');

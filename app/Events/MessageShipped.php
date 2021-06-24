@@ -9,20 +9,23 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use App\Models\ChatMessage;
 
-class OrderShipped
+
+// Needed to implements ShouldBroadcast from Event dispatch
+class MessageShipped implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+    private $chatMessage;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($message, $user)
+    public function __construct(ChatMessage $chatMessage)
     {
-        $this->message = $message;
-        $this->user = $user;
+        $this->chatMessage = $chatMessage;
     }
 
     /**
@@ -32,6 +35,21 @@ class OrderShipped
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('chatuser');
+        return new PrivateChannel('chatuser.' . $this->chatMessage->chatroom_id);
+    }
+
+    public function broadcastWith()
+    {
+        return [$this->chatMessage];
+    }
+
+    /**
+     * The event's broadcast name.
+     *
+     * @return string
+     */
+    public function broadcastAs()
+    {
+        return 'message.broadcasting';
     }
 }

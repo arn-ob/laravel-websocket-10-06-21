@@ -9,3 +9,8 @@
 ## URL: <http://localhost:8000/laravel-websockets>
 
 ## npm run dev && php artisan serve 
+
+## For Authication UI install and Run 
+
+## php artisan ui:auth
+

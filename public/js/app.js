@@ -1913,14 +1913,37 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: ["usernames", "user_id"],
   data: function data() {
     return {
-      userId: "",
+      id: this.user_id,
+      user_name: this.usernames,
       // Math.random().toString(36).slice(-5),
       messages: [],
       newMessage: "",
-      connEnable: false
+      inbox_id: String(Number(new Date())),
+      connEnable: false,
+      socket_id: ""
     };
   },
   mounted: function mounted() {},
@@ -1929,33 +1952,117 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.connEnable = true;
-      Echo.channel("chat").listen("NewChatMessage", function (e) {
-        // Public  Channel
-        // Echo.private(`chatuser`).listen("OrderShipped", (e) => {     // Private Channel
-        if (e.user != _this.userId) {
-          _this.messages.push({
-            text: e.message,
-            user: e.user
-          });
-        }
+      this.getMessages();
+      Echo["private"]("chatuser." + this.inbox_id).listen(".message.broadcasting", function (e) {
+        // If data needed
+        var data = Array.isArray(e) ? e[0] : {};
+
+        _this.messages.push({
+          username: (data === null || data === void 0 ? void 0 : data.username) || "",
+          message: (data === null || data === void 0 ? void 0 : data.message) || ""
+        });
       });
+      this.socket_id = window.Echo.socketId();
     },
     submit: function submit() {
       var _this2 = this;
 
-      axios.post("".concat("http://127.0.0.1:8000", "/api/message"), {
-        user: this.userId,
-        message: this.newMessage
+      axios.post("/api/message", {
+        user_id: this.id,
+        recipient_id: "1",
+        user_name: this.user_name,
+        message: this.newMessage,
+        chatroom_id: this.inbox_id,
+        socket_id: this.socket_id
       }).then(function (response) {
-        // console.log(this.newMessage);
-        // console.log(this.userId);
-        _this2.messages.push({
-          text: _this2.newMessage,
-          user: _this2.userId
-        });
-
         _this2.newMessage = "";
       }, function (error) {
+        console.log(error);
+      });
+    },
+    getMessages: function getMessages() {
+      var _this3 = this;
+
+      axios.get("/api/getmessage/".concat(this.inbox_id)).then(function (response) {
+        _this3.messages = response.data;
+        console.log("Get Message ", _this3.messages);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chatguest.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chatguest.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: ["usernames", "user_id"],
+  data: function data() {
+    return {
+      newUser: "",
+      newEmail: ""
+    };
+  },
+  mounted: function mounted() {},
+  methods: {
+    createRegAndLogin: function createRegAndLogin() {
+      var data = new FormData();
+      data.append("name", this.newUser);
+      data.append("email", this.newEmail);
+      data.append("password", this.newEmail);
+      data.append("password_confirmation", this.newEmail);
+      data.append("user_type", "guest");
+      axios.post("http://127.0.0.1:8000/register", data).then(function (response) {
+        window.location.href = "/chat";
+      })["catch"](function (error) {
         console.log(error);
       });
     }
@@ -2042,6 +2149,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js"
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
 Vue.component('chat', __webpack_require__(/*! ./components/Chat.vue */ "./resources/js/components/Chat.vue").default);
+Vue.component('chatguest', __webpack_require__(/*! ./components/Chatguest.vue */ "./resources/js/components/Chatguest.vue").default);
 Vue.component('my-message', __webpack_require__(/*! ./components/MyMessage.vue */ "./resources/js/components/MyMessage.vue").default);
 Vue.component('message', __webpack_require__(/*! ./components/Message.vue */ "./resources/js/components/Message.vue").default);
 /**
@@ -2097,12 +2205,15 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   broadcaster: 'pusher',
-  key: "local",
-  cluster: "mt1",
-  wsHost: window.location.hostname,
-  wsPort: "6001",
+  key: "a450962c2b0d777d14e1",
+  cluster: "ap2",
   enabledTransports: ['ws'],
-  forceTLS: false // this convert wss to ws
+  forceTLS: true // this convert wss to ws
+  // auth: {
+  //     headers: {
+  //         Authorization: 'Bearer ' + "asdasdasdasdweqweasdasgefasdz"
+  //     },
+  // },
 
 });
 
@@ -43772,6 +43883,45 @@ component.options.__file = "resources/js/components/Chat.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/Chatguest.vue":
+/*!***********************************************!*\
+  !*** ./resources/js/components/Chatguest.vue ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Chatguest_vue_vue_type_template_id_718fdba5___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Chatguest.vue?vue&type=template&id=718fdba5& */ "./resources/js/components/Chatguest.vue?vue&type=template&id=718fdba5&");
+/* harmony import */ var _Chatguest_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Chatguest.vue?vue&type=script&lang=js& */ "./resources/js/components/Chatguest.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__.default)(
+  _Chatguest_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__.default,
+  _Chatguest_vue_vue_type_template_id_718fdba5___WEBPACK_IMPORTED_MODULE_0__.render,
+  _Chatguest_vue_vue_type_template_id_718fdba5___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Chatguest.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/Message.vue":
 /*!*********************************************!*\
   !*** ./resources/js/components/Message.vue ***!
@@ -43870,6 +44020,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/Chatguest.vue?vue&type=script&lang=js&":
+/*!************************************************************************!*\
+  !*** ./resources/js/components/Chatguest.vue?vue&type=script&lang=js& ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Chatguest_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Chatguest.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chatguest.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Chatguest_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__.default); 
+
+/***/ }),
+
 /***/ "./resources/js/components/Message.vue?vue&type=script&lang=js&":
 /*!**********************************************************************!*\
   !*** ./resources/js/components/Message.vue?vue&type=script&lang=js& ***!
@@ -43915,6 +44081,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Chat_vue_vue_type_template_id_0d66c37a___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Chat_vue_vue_type_template_id_0d66c37a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Chat.vue?vue&type=template&id=0d66c37a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chat.vue?vue&type=template&id=0d66c37a&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Chatguest.vue?vue&type=template&id=718fdba5&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/Chatguest.vue?vue&type=template&id=718fdba5& ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Chatguest_vue_vue_type_template_id_718fdba5___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Chatguest_vue_vue_type_template_id_718fdba5___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Chatguest_vue_vue_type_template_id_718fdba5___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Chatguest.vue?vue&type=template&id=718fdba5& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chatguest.vue?vue&type=template&id=718fdba5&");
 
 
 /***/ }),
@@ -44013,42 +44196,74 @@ var render = function() {
     }),
     _vm._v(" "),
     _c("div", { staticClass: "box" }, [
-      _c(
-        "div",
-        { staticClass: "form-group" },
-        [
-          _c("div", { staticStyle: { "margin-bottom": "20px" } }, [
-            _c("label", { attrs: { for: "username_1" } }, [
-              _vm._v("Your name")
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.userId,
-                  expression: "userId"
-                }
-              ],
-              staticClass: "form-control",
-              staticStyle: { "margin-bottom": "5px" },
-              attrs: { type: "text", placeholder: "User Name" },
-              domProps: { value: _vm.userId },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+      _c("div", { staticClass: "form-group" }, [
+        _c("div", { staticStyle: { "margin-bottom": "20px" } }, [
+          _c("div", { staticClass: "container" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-sm" }, [
+                _c("label", { attrs: { for: "username_1" } }, [
+                  _vm._v("Your name")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.user_name,
+                      expression: "user_name"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  staticStyle: { "margin-bottom": "5px" },
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.user_name },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.user_name = $event.target.value
+                    }
                   }
-                  _vm.userId = $event.target.value
-                }
-              }
-            }),
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-sm" }, [
+                _c("label", { attrs: { for: "inbox_id_1" } }, [
+                  _vm._v("Inbox ID")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.inbox_id,
+                      expression: "inbox_id"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  staticStyle: { "margin-bottom": "5px" },
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.inbox_id },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.inbox_id = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
             _vm._v(" "),
             _c(
               "button",
               {
                 staticClass: "btn btn-primary",
+                staticStyle: { "margin-top": "10px" },
                 attrs: { type: "button" },
                 on: {
                   click: function($event) {
@@ -44056,97 +44271,214 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v(" Join ")]
+              [_vm._v("\n            Join\n          ")]
             )
-          ]),
-          _vm._v(" "),
-          _vm._l(_vm.messages, function(message) {
-            return _c(
-              "div",
-              [
-                message.user == _vm.userId
-                  ? _c("my-message", {
-                      attrs: { message: message.text, user: message.user }
-                    })
-                  : _vm._e(),
-                _vm._v(" "),
-                message.user != _vm.userId
-                  ? _c("message", {
-                      attrs: { message: message.text, user: message.user }
-                    })
-                  : _vm._e()
-              ],
-              1
-            )
-          }),
-          _vm._v(" "),
-          _vm.connEnable == true
-            ? _c(
-                "form",
-                {
-                  on: {
-                    submit: function($event) {
-                      $event.preventDefault()
-                      return _vm.submit.apply(null, arguments)
-                    }
-                  }
-                },
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "container" },
+          [
+            _vm._l(_vm.messages, function(message) {
+              return _c(
+                "div",
+                { key: message.id },
                 [
-                  _c(
-                    "div",
-                    { staticClass: "field has-addons has-addons-fullwidth" },
-                    [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "control is-expanded",
-                          staticStyle: { width: "94%" }
-                        },
-                        [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.newMessage,
-                                expression: "newMessage"
-                              }
-                            ],
-                            staticClass: "input",
-                            attrs: {
-                              type: "text",
-                              placeholder: "Type a message"
-                            },
-                            domProps: { value: _vm.newMessage },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.newMessage = $event.target.value
-                              }
-                            }
-                          })
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "control" }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "button is-danger",
-                            attrs: { type: "submit", disabled: !_vm.newMessage }
-                          },
-                          [_vm._v("\n              Send\n            ")]
-                        )
-                      ])
-                    ]
-                  )
-                ]
+                  message.username == _vm.user_name
+                    ? _c("my-message", {
+                        attrs: {
+                          message: message.message,
+                          user: message.username
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  message.username != _vm.user_name
+                    ? _c("message", {
+                        attrs: {
+                          message: message.message,
+                          user: message.username
+                        }
+                      })
+                    : _vm._e()
+                ],
+                1
               )
-            : _vm._e()
-        ],
-        2
+            }),
+            _vm._v(" "),
+            _vm.connEnable == true
+              ? _c(
+                  "form",
+                  {
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.submit.apply(null, arguments)
+                      }
+                    }
+                  },
+                  [
+                    _c(
+                      "div",
+                      { staticClass: "field has-addons has-addons-fullwidth" },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "control is-expanded",
+                            staticStyle: { width: "94%" }
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.newMessage,
+                                  expression: "newMessage"
+                                }
+                              ],
+                              staticClass: "input",
+                              attrs: {
+                                type: "text",
+                                placeholder: "Type a message"
+                              },
+                              domProps: { value: _vm.newMessage },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.newMessage = $event.target.value
+                                }
+                              }
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "control" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "button is-danger",
+                              attrs: {
+                                type: "submit",
+                                disabled: !_vm.newMessage
+                              }
+                            },
+                            [_vm._v("\n                Send\n              ")]
+                          )
+                        ])
+                      ]
+                    )
+                  ]
+                )
+              : _vm._e()
+          ],
+          2
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chatguest.vue?vue&type=template&id=718fdba5&":
+/*!*********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chatguest.vue?vue&type=template&id=718fdba5& ***!
+  \*********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("link", {
+      attrs: {
+        rel: "stylesheet",
+        href:
+          "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      }
+    }),
+    _vm._v(" "),
+    _c("form", [
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "Name" } }, [_vm._v("Name")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.newUser,
+              expression: "newUser"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { type: "text", placeholder: "Name" },
+          domProps: { value: _vm.newUser },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.newUser = $event.target.value
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "Name" } }, [_vm._v("E-Mail Address")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.newEmail,
+              expression: "newEmail"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { type: "text", placeholder: "Enter email" },
+          domProps: { value: _vm.newEmail },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.newEmail = $event.target.value
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary",
+          attrs: { type: "button" },
+          on: {
+            click: function($event) {
+              return _vm.createRegAndLogin()
+            }
+          }
+        },
+        [_vm._v("\n      Submit\n    ")]
       )
     ])
   ])

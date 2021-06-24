@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ChatMessage;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,12 +17,20 @@ use Illuminate\Support\Facades\Log;
 |
 */
 
-// Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-//     return (int) $user->id === (int) $id;
+Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});
+
+// Type 1
+// Broadcast::channel('chatuser.{chatMessage}', function ($user, $chatMessage) {
+//     if(Auth::check()){
+//         error_log($user->id);
+//         error_log($user->name);
+//         return [ 'id'=>$user->id, 'name'=>$user->name ];
+//     }
 // });
 
-
-// Broadcast::channel('chatuser', function ($user) {
-//     Log::error($user);
-//     return $user;
-// });
+Broadcast::channel('chatuser.{chatMessage}', function ($user, $chatMessage) {
+    Log::error($user);
+    return $user;
+});
